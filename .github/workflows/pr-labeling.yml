@@ -1,0 +1,23 @@
+name: Modify Ready To Review Label
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  add_label:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }} && ${{ startsWith(github.event.comment.body, '/ready') }} && ${{ github.event.comment.user.id }} == ${{ github.event.issue.user.id }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: Triage
+  remove_label:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }} && ${{ startsWith(github.event.comment.body, '/notready') }} && ${{ github.event.comment.user.id }} == ${{ github.event.issue.user.id }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          labels: Triage
